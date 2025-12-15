@@ -29,11 +29,13 @@ app.post("/ask", async (req, res) => {
 
     res.json({ reply });
 
-  } catch (error) {
-    console.error(error);
-    res.json({ reply: "Sorry — there was an error generating a response." });
-  }
-});
+} catch (error) {
+  console.error("OPENAI ERROR:", error);
+  res.status(500).json({
+    reply: "OpenAI error — check Render logs."
+  });
+}
+
 
 import path from "path";
 import { fileURLToPath } from "url";
