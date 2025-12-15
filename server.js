@@ -11,15 +11,26 @@ app.post("/ask", async (req, res) => {
   try {
     const userMessage = req.body.message;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: "You are the FEThink AI assistant." },
-        { role: "user", content: userMessage }
-      ]
-    });
+  const completion = await openai.chat.completions.create({
+  model: "gpt-4o-mini",
+  messages: [
+    { role: "system", content: "You are the FEThink AI assistant." },
+    { role: "user", content: userMessage }
+  ]
+});
 
-    res.json({ reply: completion.choices[0].message.content });
+// SAFELY extract text
+const reply =
+  completion &&
+  completion.choices &&
+  completion.choices[0] &&
+  completion.choices[0].message &&
+  completion.choices[0].message.content
+    ? completion.choices[0].message.content
+    : "Sorry — I couldn’t generate a response.";
+
+res.json({ reply });
+
 
   } catch (error) {
     res.status(500).json({ error: "AI request failed" });
