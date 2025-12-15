@@ -34,6 +34,9 @@ const __dirname = path.dirname(__filename);
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+app.get("/widget/research", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "widget-research.html"));
+});
 
 const PORT = process.env.PORT || 3000;
 
