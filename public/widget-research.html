@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 12px;
+      font-family: Arial, sans-serif;
+      background: #fff;
+    }
+    #chat {
+      font-size: 14px;
+      margin-bottom: 8px;
+      max-height: 320px;
+      overflow-y: auto;
+    }
+    .msg { margin: 6px 0; }
+    input {
+      width: 100%;
+      padding: 8px;
+    }
+    button {
+      margin-top: 6px;
+      padding: 8px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="chat"></div>
+
+<input id="input" placeholder="Ask a research question…" />
+<button onclick="send()">Send</button>
+
+<script>
+async function send() {
+  const input = document.getElementById("input");
+  const chat = document.getElementById("chat");
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+
+  chat.innerHTML += `<div class="msg"><b>You:</b> ${text}</div>`;
+
+  const res = await fetch("/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: text,
+      context: "research"
+    })
+  });
+
+  const data = await res.json();
+  chat.innerHTML += `<div class="msg"><b>AI:</b> ${data.reply}</div>`;
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
