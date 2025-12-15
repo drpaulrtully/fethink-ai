@@ -3,51 +3,57 @@
 <head>
   <meta charset="UTF-8" />
   <style>
-    * { box-sizing: border-box; }
-    body {
+    * {
+  box-sizing: border-box;
+}
+
+html, body {
   margin: 0;
-  padding: 8px 12px 4px 12px; /* smaller bottom padding */
+  padding: 0;
+  height: auto;
+  overflow: hidden;
   font-family: Arial, sans-serif;
   background: #fff;
 }
 
-
-/* Centre the widget content */
 .widget {
   max-width: 480px;
   margin: 0 auto;
+  padding: 8px 12px 6px 12px;
 }
 
 /* Chat area */
 #chat {
   font-size: 14px;
-  margin-bottom: 10px;
-  max-height: 260px;
+  margin-bottom: 6px;
+  max-height: 220px;
   overflow-y: auto;
   border: 1px solid #eee;
-  padding: 8px;
+  padding: 6px;
   border-radius: 8px;
   background: #fafafa;
 }
 
 .msg {
-  margin: 6px 0;
+  margin: 4px 0;
 }
 
 /* Input + button */
 input {
   width: 100%;
-  padding: 8px;
+  padding: 6px;
   font-size: 14px;
 }
 
 button {
-  margin: 6px 0 0 0; /* no bottom margin */
-  padding: 8px;
+  display: block;
   width: 100%;
+  margin: 6px 0 0 0; /* ZERO bottom margin */
+  padding: 6px;
   font-size: 14px;
   cursor: pointer;
 }
+
 
 
   </style>
