@@ -11,31 +11,30 @@ app.post("/ask", async (req, res) => {
   try {
     const userMessage = req.body.message;
 
-  const completion = await openai.chat.completions.create({
-  model: "gpt-4o-mini",
-  messages: [
-    { role: "system", content: "You are the FEThink AI assistant." },
-    { role: "user", content: userMessage }
-  ]
-});
+    const response = await openai.responses.create({
+      model: "gpt-4o-mini",
+      input: [
+        {
+          role: "system",
+          content: "You are the FEThink AI research assistant."
+        },
+        {
+          role: "user",
+          content: userMessage
+        }
+      ]
+    });
 
-// SAFELY extract text
-const reply =
-  completion &&
-  completion.choices &&
-  completion.choices[0] &&
-  completion.choices[0].message &&
-  completion.choices[0].message.content
-    ? completion.choices[0].message.content
-    : "Sorry — I couldn’t generate a response.";
+    const reply = response.output_text;
 
-res.json({ reply });
-
+    res.json({ reply });
 
   } catch (error) {
-    res.status(500).json({ error: "AI request failed" });
+    console.error(error);
+    res.json({ reply: "Sorry — there was an error generating a response." });
   }
 });
+
 import path from "path";
 import { fileURLToPath } from "url";
 
