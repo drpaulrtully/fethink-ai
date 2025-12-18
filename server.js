@@ -15,16 +15,56 @@ app.use(express.static("public"));
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
+/* ---------- free tier daily limit ---------- */
+
+const FREE_DAILY_LIMIT = 5;
+
+// Simple in-memory usage store: resets if server restarts
+const freeUsage = new Map();
+
+function todayKey() {
+  return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+function getClientId(req) {
+  const ip =
+    req.headers["x-forwarded-for"] ||
+    req.socket.remoteAddress ||
+    "unknown-ip";
+  const ua = req.headers["user-agent"] || "unknown-ua";
+  return `${ip}|${ua}`;
+}
 
 /* ---------- routes ---------- */
 
 app.post("/ask", async (req, res) => {
   try {
-    const userMessage = req.body.message;
+    const { message, tier } = req.body;
+
+    if (!message) {
+      return res.json({ reply: "Please enter a question." });
+    }
+
+    // Enforce FREE tier limit only
+    if (tier === "free") {
+      const clientId = getClientId(req);
+      const key = `${todayKey()}::${clientId}`;
+      const count = freeUsage.get(key) || 0;
+
+      if (count >= FREE_DAILY_LIMIT) {
+        return res.json({
+          reply:
+            "You’ve reached today’s free limit (5 questions). Please try again tomorrow."
+        });
+      }
+
+      // Count this question
+      freeUsage.set(key, count + 1);
+    }
 
     const response = await openai.responses.create({
       model: "gpt-4o-mini",
-      input: userMessage
+      input: message
     });
 
     res.json({
@@ -34,7 +74,7 @@ app.post("/ask", async (req, res) => {
   } catch (error) {
     console.error("OPENAI ERROR:", error);
     res.status(500).json({
-      reply: "OpenAI error — check server logs."
+      reply: "Temporary error. Please try again shortly."
     });
   }
 });
