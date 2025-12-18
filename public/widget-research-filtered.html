@@ -82,7 +82,12 @@ html, body {
 }
 
 .msg {
-  margin: 4px 0;
+  margin: 16px 0;
+  line-height: 1.5;
+}
+.msg b {
+  display: block;
+  margin-top: 8px;
 }
 
 /* Input + button */
@@ -210,7 +215,14 @@ Response format:
   });
 
   const data = await res.json();
-  chat.innerHTML += `<div class="msg"><b>AI:</b> ${data.reply}</div>`;
+  const formattedReply = data.reply
+  .replace(/^### (.*)$/gm, "<b>$1</b><br><br>")
+  .replace(/^## (.*)$/gm, "<b>$1</b><br><br>")
+  .replace(/^# (.*)$/gm, "<b>$1</b><br><br>")
+  .replace(/\n\n/g, "<br><br>")
+  .replace(/\n/g, "<br>");
+
+chat.innerHTML += `<div class="msg"><b>AI:</b><br>${formattedReply}</div>`;
   }
 </script>
 
