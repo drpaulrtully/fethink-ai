@@ -6,6 +6,53 @@
     * {
   box-sizing: border-box;
 }
+/* FEThink widget styling */
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  display: block;
+}
+
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #fff;
+}
+
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #6b8cff;
+  box-shadow: 0 0 0 2px rgba(107, 140, 255, 0.15);
+}
+
+button {
+  margin-top: 10px;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  border: none;
+  background-color: #6b8cff;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #5a78e0;
+}
+
+#chat {
+  margin-top: 12px;
+  font-size: 14px;
+}
 
 html, body {
   margin: 0;
@@ -107,7 +154,12 @@ button {
   </label>
 </div>
 
-  <input id="input" placeholder="Ask a research question…" />
+  <textarea
+  id="input"
+  rows="3"
+  placeholder="Ask a research question…"
+  style="width: 100%; resize: vertical;">
+</textarea>
   <button onclick="send()">Send</button>
 </div>
 
