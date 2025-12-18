@@ -16,11 +16,11 @@ app.use(express.static("public"));
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
-/* ---------- free tier daily limit ---------- */
+/* ---------- free tier daily limit (cookie-based) ---------- */
 
 const FREE_DAILY_LIMIT = 5;
 
-// Simple in-memory usage store: resets if server restarts
+// In-memory usage store (resets on server restart)
 const freeUsage = new Map();
 
 function todayKey() {
@@ -28,13 +28,12 @@ function todayKey() {
 }
 
 function getClientId(req, res) {
-  // Look for existing cookie
-  let id = req.headers.cookie
-    ?.split(";")
-    .find(c => c.trim().startsWith("fethink_id="))
-    ?.split("=")[1];
+  // Try to read existing cookie
+  const cookieHeader = req.headers.cookie || "";
+  const match = cookieHeader.match(/fethink_id=([^;]+)/);
+  let id = match ? match[1] : null;
 
-  // If none exists, create one
+  // If no cookie, create one
   if (!id) {
     id = crypto.randomUUID();
     res.setHeader(
@@ -51,7 +50,6 @@ function getClientId(req, res) {
 app.post("/ask", async (req, res) => {
   try {
     const { message, tier } = req.body;
-console.log("DEBUG tier:", tier);
 
     if (!message) {
       return res.json({ reply: "Please enter a question." });
@@ -59,7 +57,7 @@ console.log("DEBUG tier:", tier);
 
     // Enforce FREE tier limit only
     if (tier === "free") {
-      const clientId = getClientId(req);
+      const clientId = getClientId(req, res);
       const key = `${todayKey()}::${clientId}`;
       const count = freeUsage.get(key) || 0;
 
@@ -70,7 +68,7 @@ console.log("DEBUG tier:", tier);
         });
       }
 
-      // Count this question
+      // Count this request
       freeUsage.set(key, count + 1);
     }
 
@@ -84,12 +82,13 @@ console.log("DEBUG tier:", tier);
     });
 
   } catch (error) {
-    console.error("OPENAI ERROR:", error);
+    console.error("FREE LIMIT ERROR:", error);
     res.status(500).json({
       reply: "Temporary error. Please try again shortly."
     });
   }
 });
+
 
 app.get("/widget/research", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "widget-research.html"));
