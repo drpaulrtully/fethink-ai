@@ -140,8 +140,7 @@ Question: ${question}`;
 
   const data = await res.json();
   chat.innerHTML += `<div class="msg"><b>AI:</b> ${data.reply}</div>`;
-  chat.scrollTop = chat.scrollHeight;
-}
+  }
 </script>
 
 </body>
