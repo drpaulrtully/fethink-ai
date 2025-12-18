@@ -2,6 +2,7 @@ import express from "express";
 import OpenAI from "openai";
 import path from "path";
 import { fileURLToPath } from "url";
+import crypto from "crypto";
 
 /* ---------- setup ---------- */
 
@@ -26,13 +27,23 @@ function todayKey() {
   return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
 }
 
-function getClientId(req) {
-  const ip =
-    req.headers["x-forwarded-for"] ||
-    req.socket.remoteAddress ||
-    "unknown-ip";
-  const ua = req.headers["user-agent"] || "unknown-ua";
-  return `${ip}|${ua}`;
+function getClientId(req, res) {
+  // Look for existing cookie
+  let id = req.headers.cookie
+    ?.split(";")
+    .find(c => c.trim().startsWith("fethink_id="))
+    ?.split("=")[1];
+
+  // If none exists, create one
+  if (!id) {
+    id = crypto.randomUUID();
+    res.setHeader(
+      "Set-Cookie",
+      `fethink_id=${id}; Path=/; Max-Age=31536000; SameSite=Lax`
+    );
+  }
+
+  return id;
 }
 
 /* ---------- routes ---------- */
@@ -40,6 +51,7 @@ function getClientId(req) {
 app.post("/ask", async (req, res) => {
   try {
     const { message, tier } = req.body;
+console.log("DEBUG tier:", tier);
 
     if (!message) {
       return res.json({ reply: "Please enter a question." });
