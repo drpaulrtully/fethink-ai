@@ -198,7 +198,7 @@ Response format:
   if (!text) return;
   input.value = "";
 
-  chat.innerHTML += `<div class="msg"><b>You:</b> ${text}</div>`;
+  chat.innerHTML += `<div class="msg"><b>You:</b> ${question}</div>`;
 
   const res = await fetch("/ask", {
     method: "POST",
