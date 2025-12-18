@@ -93,6 +93,10 @@ app.post("/ask", async (req, res) => {
 app.get("/widget/research", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "widget-research.html"));
 });
+app.get("/widget/research-filtered", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/widget-research-filtered.html"));
+});
+
 
 /* ---------- start server ---------- */
 
