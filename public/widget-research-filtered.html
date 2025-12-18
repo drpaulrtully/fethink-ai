@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: auto;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  background: #fff;
+}
+
+.widget {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 8px 12px 6px 12px;
+}
+
+/* Chat area */
+#chat {
+  font-size: 14px;
+  margin-bottom: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+  border: 1px solid #eee;
+  padding: 6px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.msg {
+  margin: 4px 0;
+}
+
+/* Input + button */
+input {
+  width: 100%;
+  padding: 6px;
+  font-size: 14px;
+}
+
+button {
+  display: block;
+  width: 100%;
+  margin: 6px 0 0 0; /* ZERO bottom margin */
+  padding: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+
+
+  </style>
+</head>
+<body>
+
+<div class="widget">
+  <div id="chat"></div>
+
+<div style="margin-bottom: 8px;">
+  <label>
+    Subject:
+    <select id="subject">
+      <option value="General">General</option>
+      <option value="Sociology">Sociology</option>
+      <option value="Education">Education</option>
+      <option value="Psychology">Psychology</option>
+      <option value="Philosophy">Philosophy</option>
+      <option value="Politics">Politics</option>
+      <option value="Media Studies">Media Studies</option>
+      <option value="Health & Social Care">Health & Social Care</option>
+      <option value="English">English</option>
+      <option value="History">History</option>
+      <option value="Motor Vehicle">Motor Vehicle</option>
+      <option value="Travel & Tourism">Travel & Tourism</option>
+      <option value="Engineering">Engineering</option>
+      <option value="Construction">Construction</option>
+      <option value="Hair & Beauty">Hair & Beauty</option>
+    </select>
+  </label>
+</div>
+
+<div style="margin-bottom: 8px;">
+  <label>
+    Activity:
+    <select id="activity">
+      <option value="Lesson Plan">Lesson Plan</option>
+      <option value="Scheme of Work">Scheme of Work</option>
+      <option value="Assessment Task">Assessment Task</option>
+      <option value="Blended Learning">Blended Learning</option>
+      <option value="Questioning">Questioning</option>
+      <option value="Group Activity">Group Activity</option>
+      <option value="Revision Support">Revision Support</option>
+      <option value="Theory Class">Theory Class</option>
+      <option value="Icebreaker">Icebreaker</option>
+      <option value="Lesson Closer">Lesson Closer</option>
+      <option value="Practice Tasks">Practice Tasks</option>
+      <option value="Research Project">Research Project</option>
+      <option value="10-minute tasks">10-minute tasks</option>
+    </select>
+  </label>
+</div>
+
+  <input id="input" placeholder="Ask a research question…" />
+  <button onclick="send()">Send</button>
+</div>
+
+
+<script>
+async function send() {
+  const input = document.getElementById("input");
+  const chat = document.getElementById("chat");
+  const subject = document.getElementById("subject").value;
+const activity = document.getElementById("activity").value;
+const question = input.value.trim();
+
+const text = `Subject: ${subject}
+Activity: ${activity}
+Question: ${question}`;
+
+  if (!text) return;
+  input.value = "";
+
+  chat.innerHTML += `<div class="msg"><b>You:</b> ${text}</div>`;
+
+  const res = await fetch("/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      message: text,
+      tier: "free"
+    })
+  });
+
+  const data = await res.json();
+  chat.innerHTML += `<div class="msg"><b>AI:</b> ${data.reply}</div>`;
+  chat.scrollTop = chat.scrollHeight;
+}
+</script>
+
+</body>
+</html>
