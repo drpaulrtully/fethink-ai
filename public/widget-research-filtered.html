@@ -84,7 +84,17 @@ html, body {
 .msg {
   margin: 16px 0;
   line-height: 1.5;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #eee;
 }
+
+.msg:last-child {
+  border-bottom: none;
+}
+.msg b {
+  color: #333;
+}
+
 .ai-h {
   font-weight: 700;
   margin: 10px 0 6px 0; /* one line above, one line below */
@@ -242,8 +252,32 @@ formattedReply = formattedReply.replace(
 formattedReply = formattedReply.replace(/\n/g, "<br>");
 
 
-chat.innerHTML += `<div class="msg"><b>AI:</b><br>${formattedReply}</div>`;
+chat.innerHTML += `
+  <div class="msg ai-msg">
+    <div class="ai-header">
+      <b>AI:</b>
+      <button class="copy-btn" onclick="copyAIResponse(this)">Copy</button>
+    </div>
+    <div class="ai-content">
+      ${formattedReply}
+    </div>
+  </div>
+`;
   }
+function copyAIResponse(button) {
+  const content = button
+    .closest(".ai-msg")
+    .querySelector(".ai-content");
+
+  const text = content.innerText;
+
+  navigator.clipboard.writeText(text).then(() => {
+    const original = button.textContent;
+    button.textContent = "Copied";
+    setTimeout(() => (button.textContent = original), 1500);
+  });
+}
+
 </script>
 
 </body>
