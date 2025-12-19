@@ -121,8 +121,24 @@ button {
   cursor: pointer;
 }
 
+/* AI action buttons (Copy / Save) */
+.ai-actions {
+  display: flex;
+  gap: 6px;
+}
 
+.save-btn {
+  font-size: 12px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
+.save-btn:hover {
+  background: #f0f0f0;
+}
   </style>
 </head>
 <body>
@@ -256,13 +272,17 @@ chat.innerHTML += `
   <div class="msg ai-msg">
     <div class="ai-header">
       <b>AI:</b>
-      <button class="copy-btn" onclick="copyAIResponse(this)">Copy</button>
+      <div class="ai-actions">
+        <button class="copy-btn" onclick="copyAIResponse(this)">Copy</button>
+        <button class="save-btn" onclick="saveAIResponse(this)">Save</button>
+      </div>
     </div>
     <div class="ai-content">
       ${formattedReply}
     </div>
   </div>
 `;
+
   }
 function copyAIResponse(button) {
   const content = button
@@ -311,6 +331,26 @@ function showCopied(button) {
   }, 1500);
 }
 
+function saveAIResponse(button) {
+  const content = button
+    .closest(".ai-msg")
+    .querySelector(".ai-content");
+
+  const text = content.innerText;
+
+  const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "FEThink_AI_Response.txt";
+
+  document.body.appendChild(link);
+  link.click();
+
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
 
 </script>
 
