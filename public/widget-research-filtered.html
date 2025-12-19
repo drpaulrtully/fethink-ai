@@ -271,12 +271,46 @@ function copyAIResponse(button) {
 
   const text = content.innerText;
 
-  navigator.clipboard.writeText(text).then(() => {
-    const original = button.textContent;
-    button.textContent = "Copied";
-    setTimeout(() => (button.textContent = original), 1500);
-  });
+  // Try modern clipboard API first
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      showCopied(button);
+    }).catch(() => {
+      fallbackCopy(text, button);
+    });
+  } else {
+    // Fallback for Payhip / iframes / older browsers
+    fallbackCopy(text, button);
+  }
 }
+
+function fallbackCopy(text, button) {
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.focus();
+  textarea.select();
+
+  try {
+    document.execCommand("copy");
+    showCopied(button);
+  } catch (err) {
+    alert("Copy failed. Please select and copy manually.");
+  }
+
+  document.body.removeChild(textarea);
+}
+
+function showCopied(button) {
+  const original = button.textContent;
+  button.textContent = "Copied";
+  setTimeout(() => {
+    button.textContent = original;
+  }, 1500);
+}
+
 
 </script>
 
