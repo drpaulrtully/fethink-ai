@@ -130,20 +130,41 @@ button {
 .save-btn {
   font-size: 12px;
   padding: 4px 8px;
-  border: 1px solid #ddd;
-  background: #fff;
+  border: 1px solid #999;
+  background: #d9d9d9; /* dark grey */
+  color: #000;        /* black text */
   border-radius: 6px;
   cursor: pointer;
 }
 
 .save-btn:hover {
+  background: #eeeeee; /* light grey */
+}
+
+
+.save-btn:hover {
   background: #f0f0f0;
 }
+
+#usage-indicator {
+  font-size: 13px;
+  color: #555;
+  margin: 6px 0 10px;
+}
+
+#usage-indicator span {
+  font-weight: 600;
+}
+
   </style>
 </head>
 <body>
 
 <div class="widget">
+<div id="usage-indicator">
+  Free questions used: <span id="used-count">0</span> / 5
+</div>
+
   <div id="chat"></div>
 
 <div style="margin-bottom: 8px;">
@@ -246,6 +267,13 @@ Response format:
   });
 
   const data = await res.json();
+// Update free question usage indicator
+if (typeof data.used === "number" && typeof data.limit === "number") {
+  document.getElementById("used-count").textContent = data.used;
+} else if (typeof data.remaining === "number") {
+  document.getElementById("used-count").textContent = 5 - data.remaining;
+}
+
   // 1. Escape HTML so nothing breaks
 const safeReply = (data.reply || "")
   .replace(/&/g, "&amp;")
