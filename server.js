@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import crypto from "crypto";
 
+const sessionUsage = new Map();
+
 /* ---------- setup ---------- */
 
 const __filename = fileURLToPath(import.meta.url);
@@ -58,9 +60,9 @@ let used = null;
 
     // Enforce FREE tier limit only
     if (tier === "free") {
-      const clientId = getClientId(req, res);
-      const key = `${todayKey()}::${clientId}`;
-      const count = freeUsage.get(key) || 0;
+      const key = req.socket.remoteAddress;
+const count = sessionUsage.get(key) || 0;
+
 
       if (count >= FREE_DAILY_LIMIT) {
         return res.json({
@@ -70,7 +72,7 @@ let used = null;
       }
 
       // Count this request
-      freeUsage.set(key, count + 1);
+      sessionUsage.set(key, count + 1);
 used = count + 1;
 
     }
