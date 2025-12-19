@@ -96,6 +96,21 @@ used = count + 1;
     });
   }
 });
+app.get("/usage", (req, res) => {
+  const tier = req.query.tier;
+
+  if (tier !== "free") {
+    return res.json({ used: null, limit: FREE_DAILY_LIMIT });
+  }
+
+  const key = req.socket.remoteAddress;
+  const used = sessionUsage.get(key) || 0;
+
+  res.json({
+    used,
+    limit: FREE_DAILY_LIMIT
+  });
+});
 
 
 app.get("/widget/research", (req, res) => {
