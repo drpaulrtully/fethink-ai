@@ -267,6 +267,7 @@ Response format:
   });
 
   const data = await res.json();
+console.log("ASK RESPONSE:", data);
 // Update free question usage indicator
 if (typeof data.used === "number" && typeof data.limit === "number") {
   document.getElementById("used-count").textContent = data.used;
