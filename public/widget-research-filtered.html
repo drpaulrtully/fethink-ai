@@ -87,7 +87,7 @@ html, body {
 }
 .msg b {
   display: block;
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 /* Input + button */
@@ -219,7 +219,7 @@ Response format:
   .replace(/^### (.*)$/gm, "<b>$1</b><br>")
   .replace(/^## (.*)$/gm, "<b>$1</b><br>")
   .replace(/^# (.*)$/gm, "<b>$1</b><br>")
-  .replace(/\n\n/g, "<br><br>")
+  .replace(/\n\n/g, "<br>")
   .replace(/\n/g, "<br>");
 
 
