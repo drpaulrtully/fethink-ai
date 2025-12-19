@@ -71,7 +71,7 @@ let used = null;
 
       // Count this request
       freeUsage.set(key, count + 1);
-const used = count + 1;
+used = count + 1;
 
     }
 
