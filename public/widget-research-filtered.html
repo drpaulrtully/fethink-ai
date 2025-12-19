@@ -380,7 +380,22 @@ function saveAIResponse(button) {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
+async function refreshUsage() {
+  try {
+    const res = await fetch("/usage?tier=free");
+    const data = await res.json();
 
+    if (typeof data.used === "number") {
+      const counter = document.getElementById("used-count");
+      if (counter) {
+        counter.textContent = data.used;
+      }
+    }
+  } catch (err) {
+    // Silently fail — counter will update after next question
+  }
+}
+refreshUsage();
 </script>
 
 </body>
