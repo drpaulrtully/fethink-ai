@@ -70,6 +70,8 @@ app.post("/ask", async (req, res) => {
 
       // Count this request
       freeUsage.set(key, count + 1);
+const used = count + 1;
+
     }
 
     const response = await openai.responses.create({
@@ -77,9 +79,12 @@ app.post("/ask", async (req, res) => {
       input: message
     });
 
-    res.json({
-      reply: response.output_text || "No response generated."
-    });
+  res.json({
+  reply: response.output_text || "No response generated.",
+  used: tier === "free" ? used : null,
+  limit: FREE_DAILY_LIMIT
+});
+
 
   } catch (error) {
     console.error("FREE LIMIT ERROR:", error);
