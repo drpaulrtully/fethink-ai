@@ -50,6 +50,7 @@ function getClientId(req, res) {
 app.post("/ask", async (req, res) => {
   try {
     const { message, tier } = req.body;
+let used = null;
 
     if (!message) {
       return res.json({ reply: "Please enter a question." });
