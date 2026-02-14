@@ -10,7 +10,7 @@
 .free-header h1 {
   font-size: 32px;
   font-weight: 700;
-  margin: 0 0 4px 0;
+  margin: 0 0 2px 0;
   letter-spacing: -0.025em;
 }
 
@@ -99,15 +99,6 @@ button:hover {
 #chat {
   margin-top: 12px;
   font-size: 14px;
-}
-
-html, body {
-  margin: 0;
-  padding: 0;
-  height: auto;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: #fff;
 }
 
 .widget {
@@ -207,7 +198,7 @@ html, body {
   background: linear-gradient(135deg, #fdf2f8 0%, #f5f3ff 50%, #faf5ff 100%);
   min-height: 100vh;
   margin: 0;
-  padding: 8px;
+  padding: 4px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
@@ -218,7 +209,7 @@ html, body {
   border-radius: 20px;
   max-width: 520px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 10px 16px 12px 16px;   /* less top padding */
   box-shadow: 
     0 20px 40px rgba(0,0,0,0.08),
     0 1px 3px rgba(0,0,0,0.1);
@@ -231,8 +222,6 @@ html, body {
 <div class="widget">
 <div id="usage-indicator">
 <!-- SMART FREE GATE - One-time cookie -->
-<div id="gate" style="display:block; text-align:center; padding:40px; background:#f8fafc; border-radius:12px; margin:20px 0;">
-  <h2 style="color:#1
 <div class="free-header">
   <h1>AI Lesson Designer</h1>
   <p class="free-subtitle">Free Version • 5 queries per day • Core subjects</p>
@@ -245,7 +234,15 @@ html, body {
 </div>
   Free questions used: <span id="used-count">0</span> / 5
 </div>
+<div id="gate" style="padding:24px;text-align:center;background:#f8fafc;border-radius:12px;margin:12px 0">
+  <h3>Enter Free Access Code</h3>
+  <input id="code" placeholder="FE-FREE-2026"
+  style="padding:12px 16px;width:200px;font-size:16px;border:1px solid #d1d5db;border-radius:8px;margin-right:8px;" />
+  <button onclick="unlockGate()" style="padding:12px 16px;font-size:14px;border-radius:8px;border:none;background:#1e40af;color:#fff;cursor:pointer;">
+    Unlock
+  </button>
 
+<div id="app" style="display:none;">
   <div id="chat"></div>
 
 <div style="margin-bottom: 8px;">
@@ -299,10 +296,41 @@ html, body {
   style="width: 100%; resize: vertical;">
 </textarea>
   <button onclick="send()">Send</button>
+</div> <!-- end #app -->
 </div>
 
 
 <script>
+function unlockGate() {
+  const code = document.getElementById("code")?.value.trim();
+  if (!code) return alert("Enter your access code.");
+
+  if (code !== "FE-FREE-2026") return alert("Wrong code.");
+
+  // remember for 24h
+  document.cookie = "fethink_free_unlocked=true; Path=/; Max-Age=86400; SameSite=Lax";
+
+  const gate = document.getElementById("gate");
+  const app = document.getElementById("app");
+
+  if (gate) gate.style.display = "none";
+  if (app) app.style.display = "block";
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const unlocked = document.cookie.includes("fethink_free_unlocked=true");
+  const gate = document.getElementById("gate");
+  const app = document.getElementById("app");
+
+  if (unlocked) {
+    if (gate) gate.style.display = "none";
+    if (app) app.style.display = "block";
+  } else {
+    if (gate) gate.style.display = "block";
+    if (app) app.style.display = "none";
+  }
+});
+
 async function send() {
   const input = document.getElementById("input");
   const chat = document.getElementById("chat");

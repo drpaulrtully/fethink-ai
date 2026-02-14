@@ -47,6 +47,11 @@ function getClientId(req, res) {
   return id;
 }
 
+function hasFreeUnlockCookie(req) {
+  const cookieHeader = req.headers.cookie || "";
+  return cookieHeader.includes("fethink_free_unlocked=true");
+}
+
 /* ---------- routes ---------- */
 
 app.post("/ask", async (req, res) => {
@@ -56,6 +61,13 @@ let used = null;
 
     if (!message) {
       return res.json({ reply: "Please enter a question." });
+    }
+    
+// Enforce access gate for FREE tier
+    if (tier === "free" && !hasFreeUnlockCookie(req)) {
+      return res.status(403).json({
+        reply: "Access code required. Please unlock the free gate first."
+      });
     }
 
     // Enforce FREE tier limit only
@@ -113,11 +125,24 @@ app.get("/usage", (req, res) => {
 });
 
 
-app.get("/widget/research", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "widget-research.html"));
-});
-app.get("/widget/research-filtered", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/widget-research-filtered.html"));
+app.get('/widget/research-filtered', (req, res) => {
+  const { code, tier = 'free' } = req.query;  // ?code=FE-FREE&tier=free
+  if (tier === 'free' && code !== 'FE-FREE-2026') {
+    return res.send(`
+      <h1>🔐 Access Required</h1>
+      <p>Enter code from Payhip: <input id="code" placeholder="FE-FREE-2026">
+      <button onclick="checkCode()">Unlock Free</button>
+      <script>
+        function checkCode() {
+          const code = document.getElementById('code').value;
+          if (code === 'FE-FREE-2026') {
+            window.location = '/widget/research-filtered?code=FE-FREE-2026&tier=free';
+          } else alert('Wrong code');
+        }
+      </script>
+    `);
+  }
+  res.sendFile(path.join(__dirname, 'public/widget-research-filtered.html'));
 });
 
 
