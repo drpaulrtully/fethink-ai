@@ -2,20 +2,67 @@
 <html>
 <head>
   <meta charset="UTF-8" />
-/* FREE VERSION HEADER + UPSELL */
+/* FEthink Pro Free Header - Clean Professional */
 .free-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 16px;
+  background: #1e293b; /* Dark slate */
+  color: #f8fafc; /* Light slate */
+  padding: 24px 20px;
+  text-align: center;
+  border-radius: 0; /* Sharp modern */
+  margin: -8px -12px 20px -12px; /* Full width */
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 }
-.free-header h1 { margin: 0 0 8px 0; font-size: 28px; }
+.free-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.025em;
+}
+.free-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0;
+}
 .free-upsell {
-  background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; 
-  padding: 12px; margin: 12px 0; text-align: center; font-weight: 500;
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.5;
 }
-.free-upsell a { color: #e17055; font-weight: 700; text-decoration: none; }
+.free-upsell strong {
+  color: #1e40af; /* Professional blue */
+}
+.free-upsell a {
+  display: inline-block;
+  background: #1e40af;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  margin-top: 8px;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.free-upsell a:hover {
+  background: #1e3a8a;
+}
 .limit-reached {
-  background: #fed7d7; border: 1px solid #fab1a0; color: #c53030; 
-  padding: 16px; border-radius: 8px; text-align: center; margin: 12px 0;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  margin: 16px 0;
+}
+.limit-reached strong {
+  color: #dc2626;
+  display: block;
+  font-size: 18px;
+  margin-bottom: 8px;
 }
   <style>
     * {
@@ -178,13 +225,14 @@ button {
 <div class="widget">
 <div id="usage-indicator">
 <div class="free-header">
-  <h1>🎯 AI Lesson Designer - Free</h1>
-  <p>5 queries/day • Core FE subjects • Copy/Save only</p>
+  <h1>AI Lesson Designer</h1>
+  <p class="free-subtitle">Free Version • 5 queries per day • Core subjects</p>
 </div>
 <div class="free-upsell">
-  🚀 <strong>Plus (£4.99/mo):</strong> 50 queries, teacher packs, Word exports<br>
-  ⭐ <strong>Pro (£9.99/mo):</strong> 200 queries, PDF/XLS, studios<br>
-  <a href="https://payhip.com/FEThink/ai-plans" target="_blank">Upgrade Now →</a>
+  <strong>Need more?</strong><br>
+  Plus: 50 queries/day, teacher packs, Word exports (£4.99/mo)<br>
+  Pro: 200 queries/day, PDF/XLS exports, full studios (£9.99/mo)<br>
+  <a href="https://payhip.com/FEThink/ai-plans" target="_blank">Upgrade for Full Power</a>
 </div>
   Free questions used: <span id="used-count">0</span> / 5
 </div>
