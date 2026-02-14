@@ -2,6 +2,21 @@
 <html>
 <head>
   <meta charset="UTF-8" />
+/* FREE VERSION HEADER + UPSELL */
+.free-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 16px;
+}
+.free-header h1 { margin: 0 0 8px 0; font-size: 28px; }
+.free-upsell {
+  background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; 
+  padding: 12px; margin: 12px 0; text-align: center; font-weight: 500;
+}
+.free-upsell a { color: #e17055; font-weight: 700; text-decoration: none; }
+.limit-reached {
+  background: #fed7d7; border: 1px solid #fab1a0; color: #c53030; 
+  padding: 16px; border-radius: 8px; text-align: center; margin: 12px 0;
+}
   <style>
     * {
   box-sizing: border-box;
@@ -162,6 +177,15 @@ button {
 
 <div class="widget">
 <div id="usage-indicator">
+<div class="free-header">
+  <h1>🎯 AI Lesson Designer - Free</h1>
+  <p>5 queries/day • Core FE subjects • Copy/Save only</p>
+</div>
+<div class="free-upsell">
+  🚀 <strong>Plus (£4.99/mo):</strong> 50 queries, teacher packs, Word exports<br>
+  ⭐ <strong>Pro (£9.99/mo):</strong> 200 queries, PDF/XLS, studios<br>
+  <a href="https://payhip.com/FEThink/ai-plans" target="_blank">Upgrade Now →</a>
+</div>
   Free questions used: <span id="used-count">0</span> / 5
 </div>
 
@@ -269,6 +293,20 @@ Response format:
   const data = await res.json();
 console.log("ASK RESPONSE:", data);
 // Update free question usage indicator
+if (data.limitReached) {
+  document.querySelector('#input').style.display = 'none';
+  document.querySelector('button').style.display = 'none';
+  document.getElementById('chat').innerHTML += `
+    <div class="limit-reached">
+      <strong>Daily Free Limit Reached!</strong><br>
+      You've used all 5 free questions today.<br>
+      <a href="https://payhip.com/FEThink/ai-plans" target="_blank">
+        Upgrade to Plus for 50/day → 
+      </a>
+    </div>
+  `;
+  return;
+}
 if (typeof data.used === "number" && typeof data.limit === "number") {
   document.getElementById("used-count").textContent = data.used;
 } else if (typeof data.remaining === "number") {
