@@ -241,6 +241,7 @@ html, body {
   <button onclick="unlockGate()" style="padding:12px 16px;font-size:14px;border-radius:8px;border:none;background:#1e40af;color:#fff;cursor:pointer;">
     Unlock
   </button>
+</div> <!-- end #gate -->
 
 <div id="app" style="display:none;">
   <div id="chat"></div>
@@ -368,7 +369,10 @@ Response format:
 
   const res = await fetch("/ask", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+  "Content-Type": "application/json",
+  "X-Free-Unlocked": document.cookie.includes("fethink_free_unlocked=true") ? "1" : "0"
+},
     body: JSON.stringify({
       message: text,
       tier: "free"

@@ -49,7 +49,8 @@ function getClientId(req, res) {
 
 function hasFreeUnlockCookie(req) {
   const cookieHeader = req.headers.cookie || "";
-  return cookieHeader.includes("fethink_free_unlocked=true");
+  const headerUnlock = req.headers["x-free-unlocked"] === "1";
+  return cookieHeader.includes("fethink_free_unlocked=true") || headerUnlock;
 }
 
 /* ---------- routes ---------- */
@@ -126,22 +127,6 @@ app.get("/usage", (req, res) => {
 
 
 app.get('/widget/research-filtered', (req, res) => {
-  const { code, tier = 'free' } = req.query;  // ?code=FE-FREE&tier=free
-  if (tier === 'free' && code !== 'FE-FREE-2026') {
-    return res.send(`
-      <h1>🔐 Access Required</h1>
-      <p>Enter code from Payhip: <input id="code" placeholder="FE-FREE-2026">
-      <button onclick="checkCode()">Unlock Free</button>
-      <script>
-        function checkCode() {
-          const code = document.getElementById('code').value;
-          if (code === 'FE-FREE-2026') {
-            window.location = '/widget/research-filtered?code=FE-FREE-2026&tier=free';
-          } else alert('Wrong code');
-        }
-      </script>
-    `);
-  }
   res.sendFile(path.join(__dirname, 'public/widget-research-filtered.html'));
 });
 
